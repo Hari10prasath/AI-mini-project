@@ -1,0 +1,34 @@
+import random
+
+# Payoff matrix: rows = AI, cols = Opponent
+payoff_matrix = {
+    'Rock': {'Rock': 0, 'Paper': -1, 'Scissors': 1},
+    'Paper': {'Rock': 1, 'Paper': 0, 'Scissors': -1},
+    'Scissors': {'Rock': -1, 'Paper': 1, 'Scissors': 0}
+}
+
+# Track opponent history
+opponent_history = []
+
+def predict_opponent_move():
+    if not opponent_history:
+        return random.choice(['Rock', 'Paper', 'Scissors'])
+    freq = {move: opponent_history.count(move) for move in ['Rock', 'Paper', 'Scissors']}
+    return max(freq, key=freq.get)
+
+def choose_ai_move(predicted_move):
+    counter = {'Rock': 'Paper', 'Paper': 'Scissors', 'Scissors': 'Rock'}
+    return counter[predicted_move]
+
+def play_round(opponent_move):
+    opponent_history.append(opponent_move)
+    predicted = predict_opponent_move()
+    ai_move = choose_ai_move(predicted)
+    result = payoff_matrix[ai_move][opponent_move]
+    return ai_move, result
+
+# Simulate 10 rounds
+for i in range(10):
+    opponent = random.choice(['Rock', 'Paper', 'Scissors'])
+    ai, outcome = play_round(opponent)
+    print(f"Round {i+1}: AI -> {ai}, Opponent -> {opponent}, Result -> {'Win' if outcome==1 else 'Lose' if outcome==-1 else 'Draw'}")
